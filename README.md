@@ -12,3 +12,5 @@ To run, just type `make`. You can override the `REGIONS` environment variable to
 ```bash
 REGIONS=18 make
 ```
+
+This project was inspired by Nelson Minar’s work on a [vector river map](https://github.com/NelsonMinar/vector-river-map).
