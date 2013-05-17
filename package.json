@@ -1,0 +1,21 @@
+{
+  "name": "us-rivers",
+  "version": "0.0.1",
+  "description": "Roll your own TopoJSON from NHDPlus.",
+  "keywords": [
+    "topojson",
+    "geojson",
+    "shapefile"
+  ],
+  "author": {
+    "name": "Mike Bostock",
+    "url": "http://bost.ocks.org/mike"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mbostock/us-rivers.git"
+  },
+  "devDependencies": {
+    "topojson": "1"
+  }
+}
