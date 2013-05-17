@@ -104,4 +104,4 @@ shp/%.shp:
 
 topo/flowline.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
 	mkdir -p $(dir $@)
-	node_modules/.bin/topojson -o $@ -- $(filter %.shp,$^)
+	node_modules/.bin/topojson -- $(filter %.shp,$^) | bin/topomerge > $@
