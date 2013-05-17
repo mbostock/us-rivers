@@ -100,6 +100,7 @@ shp/%.shp:
 	mkdir -p $(dir $@)
 	7z -y -oshp e $< '*/*/NHDSnapshot/Hydrography/NHDFlowline*' '*/*/NHDSnapshot/Hydrography/nhdflowline*'
 	for i in shp/NHDFlowline.*; do mv -v "$$i" "shp/$*.$${i##*\.}"; done
+	touch $@
 
 topo/flowline.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
 	mkdir -p $(dir $@)
