@@ -10,7 +10,10 @@ var mesh = merge(topology, arcs);
 
 process.stdout.write("{\"type\":\"Topology\",\"transform\":");
 process.stdout.write(JSON.stringify(topology.transform));
-process.stdout.write(",\"objects\":{},\"arcs\":[");
+process.stdout.write(",\"objects\":{\"mesh\":{\"type\":\"MultiLineString\",\"arcs\":[");
+if (mesh.length) process.stdout.write("[0]");
+for (var i = 1, n = mesh.length; i < n; ++i) process.stdout.write(",[" + i + "]");
+process.stdout.write("]}},\"arcs\":[");
 
 for (var i = 0, n = mesh.length; i < n; ++i) {
   process.stdout.write("[");
