@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+canvas {
+  border: solid 1px #ccc;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script>
+
+var scale = 2,
+		width = 960 * scale,
+    height = 500 * scale;
+
+var projection = d3.geo.albers()
+    .scale(1100 * scale)
+    .translate([width / 2, height / 2])
+    .precision(0);
+
+var canvas = d3.select("body").append("canvas")
+    .attr("width", width)
+    .attr("height", height);
+
+var context = canvas.node().getContext("2d");
+
+context.globalAlpha = .5;
+context.strokeStyle = "#000";
+context.lineWidth = .5;
+context.lineJoin = "round";
+
+var path = d3.geo.path()
+    .projection(projection)
+    .context(context);
+
+var q = queue(1);
+["01", "02", "03N", "03S", "03W", "04", "05", "06", "07", "08", "09", "10U", "10L", "11", "12", "13", "14", "15", "16", "17", "18"].forEach(function(r) { q.defer(renderRegion, r); });
+q.await(function() { console.log("done!"); });
+
+function renderRegion(region, callback) {
+	console.log("loading " + region);
+	d3.json("../" + region + ".json", function(error, topology) {
+		console.log("rendering " + region);
+	  context.beginPath();
+	  path(topojson.feature(topology, topology.objects.mesh));
+	  context.stroke();
+	  setTimeout(callback, 1000); // a brief delay to allow redraw
+	});
+}
+
+</script>
