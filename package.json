@@ -16,6 +16,10 @@
     "url": "http://github.com/mbostock/us-rivers.git"
   },
   "devDependencies": {
+    "canvas": "1",
+    "d3": "3",
+    "queue-async": "1",
+    "shapefile": "0.1",
     "topojson": "1"
   }
 }

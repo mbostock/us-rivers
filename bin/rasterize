@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+var fs = require("fs"),
+    d3 = require("d3"),
+    shapefile = require("shapefile"),
+    Canvas = require("canvas"),
+    queue = require("queue-async");
+
+var regions = "01 02 03N 03S 03W 04 05 06 07 08 09 10U 10L 11 12 13 14 15 16 17 18".split(/\s+/),
+    file = fs.createWriteStream(process.argv[2]);
+
+var scale = 2,
+    width = 960 * scale,
+    height = 600 * scale;
+
+var canvas = new Canvas(width, height),
+    context = canvas.getContext("2d");
+
+context.strokeStyle = "#000";
+context.lineWidth = .5;
+context.lineJoin = "round";
+
+var projection = d3.geo.albers()
+    .scale(1280 * scale)
+    .translate([width * .48, height * .52])
+    .precision(0);
+
+var path = d3.geo.path()
+    .projection(projection)
+    .context(context);
+
+var q = queue(1);
+regions.forEach(function(r) { q.defer(renderShapefile, "shp/" + r + ".shp"); });
+q.await(output);
+
+function renderShapefile(name, callback) {
+  console.log("rendering " + name);
+  shapefile.readStream(name)
+      .on("feature", function(feature) {
+        context.beginPath();
+        path(feature);
+        context.stroke();
+      })
+      .on("error", callback)
+      .on("end", function() { callback(null); });
+}
+
+function output(error) {
+  if (error) throw error;
+  console.log("generating " + process.argv[2]);
+  canvas.pngStream().pipe(file);
+}

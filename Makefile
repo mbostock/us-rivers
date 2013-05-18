@@ -3,7 +3,7 @@
 REGIONS = 01 02 03N 03S 03W 04 05 06 07 08 09 10U 10L 11 12 13 14 15 16 17 18
 TOPOJSON = node --max_old_space_size=8192 node_modules/.bin/topojson
 
-all: $(addsuffix .json,$(addprefix topo/,$(REGIONS)))
+all: png/us-rivers.png
 
 clean:
 	rm -rf -- shp zip topo
@@ -103,6 +103,11 @@ shp/%.shp:
 	for i in shp/*lowline.*; do mv -v "$$i" "shp/$*.$${i##*\.}"; done
 	touch $@
 
+png/us-rivers.png: $(addsuffix .shp,$(addprefix shp/,$(REGIONS))) bin/rasterize
+	mkdir -p $(dir $@)
+	bin/rasterize $@
+	optipng $@
+
 topo/01-unmerged.json: shp/01.shp
 topo/02-unmerged.json: shp/02.shp
 topo/03N-unmerged.json: shp/03N.shp
@@ -124,7 +129,6 @@ topo/15-unmerged.json: shp/15.shp
 topo/16-unmerged.json: shp/16.shp
 topo/17-unmerged.json: shp/17.shp
 topo/18-unmerged.json: shp/18.shp
-topo/us-unmerged.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
 
 topo/%-unmerged.json:
 	mkdir -p $(dir $@)
