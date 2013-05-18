@@ -5,6 +5,7 @@ To install:
 ```bash
 brew install p7zip cairo pixman
 npm install
+PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig npm install canvas
 ```
 
 To make the above PNG for the entire United States (it’s big!), type `make`. Or, to make a TopoJSON file for a specific [NHD region](http://www.horizon-systems.com/nhdplus/NHDPlusV2_data.php), specify a target. For example, California:
