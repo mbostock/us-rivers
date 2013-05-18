@@ -41,7 +41,7 @@ function renderRegion(region, callback) {
   dbf.readStream("shp/" + region + "-attributes.dbf")
       .on("header", function(header) {
         if (header.fields[0].name !== "ComID") return void callback(new Error("ComID is not column 0"));
-        if (header.fields[3].name !== "StreamOrde") return void callback(new Error("StreamOrde is not column 0"));
+        if (header.fields[3].name !== "StreamOrde") return void callback(new Error("StreamOrde is not column 3"));
       })
       .on("record", function(record) { orderById[record[0]] = record[3]; })
       .on("error", callback)

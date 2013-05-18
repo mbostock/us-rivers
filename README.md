@@ -1,4 +1,4 @@
-![us-rivers](https://f.cloud.github.com/assets/230541/522207/a4bc168c-c007-11e2-86ad-8abb5d513a47.png)
+![us-rivers](https://f.cloud.github.com/assets/230541/522244/86958e38-c00f-11e2-98be-e5f541d5eba2.png)
 
 To install:
 
