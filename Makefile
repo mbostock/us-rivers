@@ -126,7 +126,6 @@ topo/17-unmerged.json: shp/17.shp
 topo/18-unmerged.json: shp/18.shp
 topo/us-unmerged.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
 
-
 topo/%-unmerged.json:
 	mkdir -p $(dir $@)
 	$(TOPOJSON) -o $@ -- $(filter %.shp,$^)
