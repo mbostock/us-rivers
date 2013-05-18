@@ -7,10 +7,10 @@ brew install p7zip
 npm install
 ```
 
-To run, just type `make`. You can override the `REGIONS` environment variable to specify a subset of [NHD regions](http://www.horizon-systems.com/nhdplus/NHDPlusV2_data.php).
+To make a TopoJSON file for the entire United States (it’s big!), type `make`. Or, to make a TopoJSON file for a specific [NHD region](http://www.horizon-systems.com/nhdplus/NHDPlusV2_data.php), specify a target. For example, California:
 
 ```bash
-REGIONS=18 make
+make topo/18.json
 ```
 
 This project was inspired by Nelson Minar’s work on a [vector river map](https://github.com/NelsonMinar/vector-river-map).

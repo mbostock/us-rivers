@@ -1,6 +1,6 @@
 # http://www.horizon-systems.com/nhdplus/NHDPlusV2_data.php
 
-all: topo/flowline.json
+all: topo/us.json
 
 clean:
 	rm -rf -- shp zip topo
@@ -9,7 +9,7 @@ zip/%.7z:
 	mkdir -p $(dir $@)
 	curl -o $@ --raw 'http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/$*.7z'
 
-REGIONS ?= 01 02 03N 03S 03W 04 05 06 07 08 09 10U 10L 11 12 13 14 15 16 17 18
+REGIONS = 01 02 03N 03S 03W 04 05 06 07 08 09 10U 10L 11 12 13 14 15 16 17 18
 
 # 	NHDPlusCA/NHDPlusV21_CA_18_NHDPlusAttributes_03 \
 # 	NHDPlusCO/NHDPlus14/NHDPlusV21_CO_14_NHDPlusAttributes_03 \
@@ -102,6 +102,29 @@ shp/%.shp:
 	for i in shp/NHDFlowline.*; do mv -v "$$i" "shp/$*.$${i##*\.}"; done
 	touch $@
 
-topo/flowline.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
+topo/01.json: shp/01.shp
+topo/02.json: shp/02.shp
+topo/03N.json: shp/03N.shp
+topo/03S.json: shp/03S.shp
+topo/03W.json: shp/03W.shp
+topo/04.json: shp/04.shp
+topo/05.json: shp/05.shp
+topo/06.json: shp/06.shp
+topo/07.json: shp/07.shp
+topo/08.json: shp/08.shp
+topo/09.json: shp/09.shp
+topo/10U.json: shp/10U.shp
+topo/10L.json: shp/10L.shp
+topo/11.json: shp/11.shp
+topo/12.json: shp/12.shp
+topo/13.json: shp/13.shp
+topo/14.json: shp/14.shp
+topo/15.json: shp/15.shp
+topo/16.json: shp/16.shp
+topo/17.json: shp/17.shp
+topo/18.json: shp/18.shp
+topo/us.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
+
+topo/%.json:
 	mkdir -p $(dir $@)
 	node_modules/.bin/topojson -- $(filter %.shp,$^) | bin/topomerge > $@
