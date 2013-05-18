@@ -30,7 +30,7 @@ var path = d3.geo.path()
     .context(context);
 
 var q = queue(1);
-regions.forEach(function(r) { q.defer(renderShapefile, "shp/" + r + ".shp"); });
+regions.forEach(function(r) { q.defer(renderShapefile, "shp/" + r + "-geometry.shp"); });
 q.await(output);
 
 function renderShapefile(name, callback) {
