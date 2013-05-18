@@ -99,7 +99,7 @@ shp/18.shp: zip/NHDPlusCA/NHDPlusV21_CA_18_NHDSnapshot_04.7z
 shp/%.shp:
 	mkdir -p $(dir $@)
 	7z -y -oshp e $< '*/*/NHDSnapshot/Hydrography/NHDFlowline*' '*/*/NHDSnapshot/Hydrography/nhdflowline*'
-	for i in shp/NHDFlowline.*; do mv -v "$$i" "shp/$*.$${i##*\.}"; done
+	for i in shp/*lowline.*; do mv -v "$$i" "shp/$*.$${i##*\.}"; done
 	touch $@
 
 topo/01-unmerged.json: shp/01.shp
