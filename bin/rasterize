@@ -3,6 +3,7 @@
 var fs = require("fs"),
     d3 = require("d3"),
     shapefile = require("shapefile"),
+    dbf = require("../node_modules/shapefile/dbf"),
     Canvas = require("canvas"),
     queue = require("queue-async");
 
@@ -30,19 +31,34 @@ var path = d3.geo.path()
     .context(context);
 
 var q = queue(1);
-regions.forEach(function(r) { q.defer(renderShapefile, "shp/" + r + "-geometry.shp"); });
+regions.forEach(function(r) { q.defer(renderRegion, r); });
 q.await(output);
 
-function renderShapefile(name, callback) {
-  console.log("rendering " + name);
-  shapefile.readStream(name)
-      .on("feature", function(feature) {
-        context.beginPath();
-        path(feature);
-        context.stroke();
+function renderRegion(region, callback) {
+  console.log("loading attributes for " + region);
+  var orderById = {};
+
+  dbf.readStream("shp/" + region + "-attributes.dbf")
+      .on("header", function(header) {
+        if (header.fields[0].name !== "ComID") return void callback(new Error("ComID is not column 0"));
+        if (header.fields[3].name !== "StreamOrde") return void callback(new Error("StreamOrde is not column 0"));
       })
+      .on("record", function(record) { orderById[record[0]] = record[3]; })
       .on("error", callback)
-      .on("end", function() { callback(null); });
+      .on("end", readShapefile);
+
+  function readShapefile() {
+    console.log("rendering geometry for " + region);
+    shapefile.readStream("shp/" + region + "-geometry.shp")
+        .on("feature", function(feature) {
+          context.lineWidth = (orderById[feature.properties.COMID] || 1) / 8;
+          context.beginPath();
+          path(feature);
+          context.stroke();
+        })
+        .on("error", callback)
+        .on("end", function() { callback(null); });
+  }
 }
 
 function output(error) {
