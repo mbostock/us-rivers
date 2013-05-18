@@ -1,6 +1,9 @@
 # http://www.horizon-systems.com/nhdplus/NHDPlusV2_data.php
 
-all: topo/us.json
+REGIONS = 01 02 03N 03S 03W 04 05 06 07 08 09 10U 10L 11 12 13 14 15 16 17 18
+TOPOJSON = node --max_old_space_size=8192 node_modules/.bin/topojson
+
+all: $(addsuffix .json,$(addprefix topo/,$(REGIONS)))
 
 clean:
 	rm -rf -- shp zip topo
@@ -8,8 +11,6 @@ clean:
 zip/%.7z:
 	mkdir -p $(dir $@)
 	curl -o $@ --raw 'http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/$*.7z'
-
-REGIONS = 01 02 03N 03S 03W 04 05 06 07 08 09 10U 10L 11 12 13 14 15 16 17 18
 
 # 	NHDPlusCA/NHDPlusV21_CA_18_NHDPlusAttributes_03 \
 # 	NHDPlusCO/NHDPlus14/NHDPlusV21_CO_14_NHDPlusAttributes_03 \
@@ -125,9 +126,10 @@ topo/17-unmerged.json: shp/17.shp
 topo/18-unmerged.json: shp/18.shp
 topo/us-unmerged.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
 
+
 topo/%-unmerged.json:
 	mkdir -p $(dir $@)
-	node_modules/.bin/topojson -o $@ -- $(filter %.shp,$^)
+	$(TOPOJSON) -o $@ -- $(filter %.shp,$^)
 
 topo/%.json: topo/%-unmerged.json
 	bin/topomerge $< > $@
