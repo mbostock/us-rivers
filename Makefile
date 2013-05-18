@@ -102,29 +102,32 @@ shp/%.shp:
 	for i in shp/NHDFlowline.*; do mv -v "$$i" "shp/$*.$${i##*\.}"; done
 	touch $@
 
-topo/01.json: shp/01.shp
-topo/02.json: shp/02.shp
-topo/03N.json: shp/03N.shp
-topo/03S.json: shp/03S.shp
-topo/03W.json: shp/03W.shp
-topo/04.json: shp/04.shp
-topo/05.json: shp/05.shp
-topo/06.json: shp/06.shp
-topo/07.json: shp/07.shp
-topo/08.json: shp/08.shp
-topo/09.json: shp/09.shp
-topo/10U.json: shp/10U.shp
-topo/10L.json: shp/10L.shp
-topo/11.json: shp/11.shp
-topo/12.json: shp/12.shp
-topo/13.json: shp/13.shp
-topo/14.json: shp/14.shp
-topo/15.json: shp/15.shp
-topo/16.json: shp/16.shp
-topo/17.json: shp/17.shp
-topo/18.json: shp/18.shp
-topo/us.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
+topo/01-unmerged.json: shp/01.shp
+topo/02-unmerged.json: shp/02.shp
+topo/03N-unmerged.json: shp/03N.shp
+topo/03S-unmerged.json: shp/03S.shp
+topo/03W-unmerged.json: shp/03W.shp
+topo/04-unmerged.json: shp/04.shp
+topo/05-unmerged.json: shp/05.shp
+topo/06-unmerged.json: shp/06.shp
+topo/07-unmerged.json: shp/07.shp
+topo/08-unmerged.json: shp/08.shp
+topo/09-unmerged.json: shp/09.shp
+topo/10U-unmerged.json: shp/10U.shp
+topo/10L-unmerged.json: shp/10L.shp
+topo/11-unmerged.json: shp/11.shp
+topo/12-unmerged.json: shp/12.shp
+topo/13-unmerged.json: shp/13.shp
+topo/14-unmerged.json: shp/14.shp
+topo/15-unmerged.json: shp/15.shp
+topo/16-unmerged.json: shp/16.shp
+topo/17-unmerged.json: shp/17.shp
+topo/18-unmerged.json: shp/18.shp
+topo/us-unmerged.json: $(addsuffix .shp,$(addprefix shp/,$(REGIONS)))
 
-topo/%.json:
+topo/%-unmerged.json:
 	mkdir -p $(dir $@)
-	node_modules/.bin/topojson -- $(filter %.shp,$^) | bin/topomerge > $@
+	node_modules/.bin/topojson -o $@ -- $(filter %.shp,$^)
+
+topo/%.json: topo/%-unmerged.json
+	bin/topomerge $< > $@
