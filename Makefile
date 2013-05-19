@@ -58,11 +58,11 @@ shp/09-attributes.dbf: zip/NHDPlusSR/NHDPlusV21_SR_09_NHDPlusAttributes_03.7z
 
 # Upper Missouri
 shp/10U-geometry.shp: zip/NHDPlusMS/NHDPlus10U/NHDPlusV21_MS_10U_NHDSnapshot_06.7z
-shp/10U-attributes.dbf: zip/NHDPlusMS/NHDPlus10L/NHDPlusV21_MS_10L_NHDPlusAttributes_07.7z
+shp/10U-attributes.dbf: zip/NHDPlusMS/NHDPlus10U/NHDPlusV21_MS_10U_NHDPlusAttributes_06.7z
 
 # Lower Missouri
 shp/10L-geometry.shp: zip/NHDPlusMS/NHDPlus10L/NHDPlusV21_MS_10L_NHDSnapshot_05.7z
-shp/10L-attributes.dbf: zip/NHDPlusMS/NHDPlus10U/NHDPlusV21_MS_10U_NHDPlusAttributes_06.7z
+shp/10L-attributes.dbf: zip/NHDPlusMS/NHDPlus10L/NHDPlusV21_MS_10L_NHDPlusAttributes_07.7z
 
 # Ark-Red-White
 shp/11-geometry.shp: zip/NHDPlusMS/NHDPlus11/NHDPlusV21_MS_11_NHDSnapshot_04.7z
@@ -108,7 +108,7 @@ shp/%-attributes.dbf:
 	mv shp/PlusFlowlineVAA.dbf $@
 	touch $@
 
-png/us-rivers.png: $(addsuffix -geometry.shp,$(addprefix shp/,$(REGIONS))) bin/rasterize
+png/us-rivers.png: $(addsuffix -geometry.shp,$(addprefix shp/,$(REGIONS))) $(addsuffix -attributes.dbf,$(addprefix shp/,$(REGIONS))) bin/rasterize
 	mkdir -p $(dir $@)
 	bin/rasterize $@
 	optipng $@
