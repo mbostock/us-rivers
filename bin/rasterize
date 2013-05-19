@@ -51,7 +51,8 @@ function renderRegion(region, callback) {
     console.log("rendering geometry for " + region);
     shapefile.readStream("shp/" + region + "-geometry.shp")
         .on("feature", function(feature) {
-          context.lineWidth = (orderById[feature.properties.COMID] || 1) / 8;
+          var order = orderById[feature.properties.COMID] || orderById[feature.properties.ComID] || 1;
+          context.lineWidth = order / 8;
           context.beginPath();
           path(feature);
           context.stroke();
