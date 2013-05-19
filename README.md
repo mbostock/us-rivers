@@ -1,10 +1,15 @@
-![us-rivers](https://f.cloud.github.com/assets/230541/522244/86958e38-c00f-11e2-98be-e5f541d5eba2.png)
+![us-rivers](https://f.cloud.github.com/assets/230541/522453/556969d4-c031-11e2-8c88-04353d69bb5d.png)
 
 To install:
 
 ```bash
 brew install p7zip cairo pixman
 npm install
+```
+
+If the installation of the [node-canvas](https://github.com/LearnBoost/node-canvas) module fails for you, you can try this after the above:
+
+```bash
 PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig npm install canvas
 ```
 
