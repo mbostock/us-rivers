@@ -1,4 +1,8 @@
+# U.S. Rivers
+
 ![us-rivers](https://f.cloud.github.com/assets/230541/522453/556969d4-c031-11e2-8c88-04353d69bb5d.png)
+
+Also available in [massive 3840x2400 resolution](http://bost.ocks.org/mike/us-rivers.png), or roll your own using the below instructions.
 
 To install:
 
