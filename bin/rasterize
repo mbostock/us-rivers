@@ -32,13 +32,16 @@ regions.forEach(function(r) { q.defer(renderRegion, r); });
 q.await(output);
 
 function renderLand(callback) {
+  var set = d3.set();
   console.log("rendering land outline");
   context.fillStyle = "#000";
   context.lineJoin = "round";
 
   shapefile.readStream("shp/land.shp")
       .on("feature", function(feature) {
-        if (feature.properties.NATION010 !== 1) return;
+        var id = feature.properties.STATE_FIPS;
+        if (set.has(id)) return;
+        set.add(id);
         context.beginPath();
         path(feature);
         context.fill();

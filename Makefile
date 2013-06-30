@@ -112,7 +112,7 @@ shp/%-attributes.dbf:
 	mv shp/PlusFlowlineVAA.dbf $@
 	touch $@
 
-shp/land.shp: zip/nationalp010g_nt00797.tar.gz
+shp/land.shp: zip/statep010_nt00798.tar.gz
 	rm -rf $(basename $@)
 	mkdir -p $(basename $@)
 	tar -xzm -C $(basename $@) -f $<
