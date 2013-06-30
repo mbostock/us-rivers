@@ -122,7 +122,7 @@ shp/land.shp: zip/nationalp010g_nt00797.tar.gz
 png/us-rivers.png: shp/land.shp $(addsuffix -geometry.shp,$(addprefix shp/,$(REGIONS))) $(addsuffix -attributes.dbf,$(addprefix shp/,$(REGIONS))) bin/rasterize
 	mkdir -p $(dir $@)
 	bin/rasterize $@
-# optipng $@
+	optipng $@
 
 topo/%-unmerged.json: shp/%-geometry.shp
 	mkdir -p $(dir $@)
