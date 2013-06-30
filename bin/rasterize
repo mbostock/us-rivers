@@ -17,13 +17,9 @@ var scale = 2,
 var canvas = new Canvas(width, height),
     context = canvas.getContext("2d");
 
-context.strokeStyle = "#000";
-context.lineWidth = .5;
-context.lineJoin = "round";
-
 var projection = d3.geo.albers()
     .scale(1280 * scale)
-    .translate([width * .48, height * .52])
+    .translate([width * .5, height * .5])
     .precision(0);
 
 var path = d3.geo.path()
@@ -31,12 +27,34 @@ var path = d3.geo.path()
     .context(context);
 
 var q = queue(1);
+q.defer(renderLand);
 regions.forEach(function(r) { q.defer(renderRegion, r); });
 q.await(output);
+
+function renderLand(callback) {
+  console.log("rendering land outline");
+  context.fillStyle = "#000";
+  context.lineJoin = "round";
+
+  shapefile.readStream("shp/land.shp")
+      .on("feature", function(feature) {
+        if (feature.properties.NATION010 !== 1) return;
+        context.beginPath();
+        path(feature);
+        context.fill();
+      })
+      .on("error", callback)
+      .on("end", function() { callback(null); });
+}
 
 function renderRegion(region, callback) {
   console.log("loading attributes for " + region);
   var orderById = {};
+
+  context.strokeStyle = "#fff";
+  context.lineWidth = 1;
+  context.lineCap = "round";
+  context.lineJoin = "round";
 
   dbf.readStream("shp/" + region + "-attributes.dbf")
       .on("header", function(header) {

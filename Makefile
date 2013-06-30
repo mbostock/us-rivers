@@ -12,6 +12,10 @@ zip/%.7z:
 	mkdir -p $(dir $@)
 	curl -o $@ --raw 'http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/$*.7z'
 
+zip/%.tar.gz:
+	mkdir -p $(dir $@)
+	curl -o $@ --raw 'http://dds.cr.usgs.gov/pub/data/nationalatlas/$(notdir $@)'
+
 # Northeast
 shp/01-geometry.shp: zip/NHDPlusNE/NHDPlusV21_NE_01_NHDSnapshot_03.7z
 shp/01-attributes.dbf: zip/NHDPlusNE/NHDPlusV21_NE_01_NHDPlusAttributes_03.7z
@@ -108,10 +112,17 @@ shp/%-attributes.dbf:
 	mv shp/PlusFlowlineVAA.dbf $@
 	touch $@
 
-png/us-rivers.png: $(addsuffix -geometry.shp,$(addprefix shp/,$(REGIONS))) $(addsuffix -attributes.dbf,$(addprefix shp/,$(REGIONS))) bin/rasterize
+shp/land.shp: zip/nationalp010g_nt00797.tar.gz
+	rm -rf $(basename $@)
+	mkdir -p $(basename $@)
+	tar -xzm -C $(basename $@) -f $<
+	for file in $(basename $@)/*; do chmod 644 $$file; mv $$file $(basename $@).$${file##*.}; done
+	rmdir $(basename $@)
+
+png/us-rivers.png: shp/land.shp $(addsuffix -geometry.shp,$(addprefix shp/,$(REGIONS))) $(addsuffix -attributes.dbf,$(addprefix shp/,$(REGIONS))) bin/rasterize
 	mkdir -p $(dir $@)
 	bin/rasterize $@
-	optipng $@
+# optipng $@
 
 topo/%-unmerged.json: shp/%-geometry.shp
 	mkdir -p $(dir $@)
