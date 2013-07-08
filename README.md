@@ -7,7 +7,7 @@ Also available in [massive 3840x2400 resolution](http://bost.ocks.org/mike/us-ri
 To install:
 
 ```bash
-brew install p7zip cairo pixman
+brew install p7zip cairo pixman optipng
 npm install
 ```
 
