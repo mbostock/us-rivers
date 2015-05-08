@@ -73,7 +73,7 @@ function renderRegion(region, callback) {
     shapefile.readStream("shp/" + region + "-geometry.shp")
         .on("feature", function(feature) {
           var order = orderById[feature.properties.COMID] || orderById[feature.properties.ComID] || 1;
-          context.lineWidth = order / 8;
+          context.lineWidth = scale * order / 16;
           context.beginPath();
           path(feature);
           context.stroke();
