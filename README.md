@@ -4,7 +4,7 @@
 
 Source: [NHDPlus](http://www.horizon-systems.com/nhdplus/NHDPlusV2_data.php)
 
-Also available in [massive 3840x2400 resolution](https://bost.ocks.org/mike/us-rivers.png). This project was inspired by Nelson Minar’s work on a [vector river map](https://github.com/NelsonMinar/vector-river-map).
+Also available in [massive 3840x2400 resolution](https://bost.ocks.org/mike/us-rivers.png).
 
 To roll your own, clone this repository. Then:
 
@@ -15,3 +15,5 @@ make
 ```
 
 (This will take a long time.)
+
+This project was inspired by [Nelson Minar](https://github.com/NelsonMinar/vector-river-map).
