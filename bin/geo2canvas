@@ -1,0 +1,103 @@
+#!/usr/bin/env node
+
+var os = require("os"),
+    fs = require("fs"),
+    Canvas = require("canvas"),
+    readline = require("readline"),
+    commander = require("commander"),
+    d3 = require("d3-geo");
+
+commander
+    .version(require("../package.json").version)
+    .usage("[options] [file]")
+    .description("Render GeoJSON to Canvas.")
+    .option("-o, --out <file>", "output file name; “-” for stdout", "out.png")
+    .option("-w, --width <value>", "output width", 960)
+    .option("-h, --height <value>", "output height", 500)
+    .option("-n, --newline-delimited", "accept newline-delimited JSON")
+    .option("--stroke <value>", "default stroke", "rgba(0, 0, 0, 0.5)")
+    .option("--line-cap <value>", "default line cap", "round")
+    .option("--line-join <value>", "default line join", "round")
+    .option("--line-width <value>", "default line width", 0.5)
+    .parse(process.argv);
+
+if (commander.args.length === 0) commander.args[0] = "-";
+else if (commander.args.length !== 1) {
+  console.error();
+  console.error("  error: multiple input files");
+  console.error();
+  process.exit(1);
+}
+
+var canvas = new Canvas(+commander.width, +commander.height),
+    context = canvas.getContext("2d"),
+    reader = read(commander.args[0], commander.newlineDelimited, transform).then(end).catch(abort),
+    writer = (commander.out === "-" ? process.stdout : fs.createWriteStream(commander.out)).on("error", handleEpipe),
+    render = d3.geoPath().context(context);
+
+context.lineWidth = commander.lineWidth;
+context.lineJoin = commander.lineJoin;
+context.lineCap = commander.lineCap;
+context.strokeStyle = commander.stroke;
+
+function read(file, newlineDelimited, callback) {
+  var index = -1,
+      input = file === "-" ? process.stdin : fs.createReadStream(file);
+
+  function readObject() {
+    return new Promise(function(resolve, reject) {
+      var data = [];
+      input
+          .on("data", function(d) { data.push(d); })
+          .on("end", function() { resolve(JSON.parse(Buffer.concat(data))); })
+          .on("error", reject);
+    });
+  }
+
+  function readNewlineDelimitedObjects() {
+    return new Promise(function(resolve, reject) {
+      var queue = Promise.resolve();
+      readline.createInterface({
+        input: input,
+        output: null
+      }).on("line", function(line) {
+        queue = queue.then(function() { return callbackObject(JSON.parse(line)); });
+      }).on("close", function() {
+        queue.then(function() { resolve(); }, reject);
+      }).on("error", reject);
+    });
+  }
+
+  function callbackObject(object) {
+    return callback(object, ++index);
+  }
+
+  return newlineDelimited
+      ? readNewlineDelimitedObjects()
+      : readObject().then(callbackObject);
+}
+
+function handleEpipe(error) {
+  if (error.code === "EPIPE" || error.errno === "EPIPE") {
+    process.exit(0);
+  }
+}
+
+function transform(d) {
+  context.beginPath();
+  render(d);
+  context.stroke();
+}
+
+function end() {
+  return new Promise(function(resolve, reject) {
+    canvas.pngStream()
+        .pipe(writer)
+        .on("close", resolve)
+        .on("error", reject);
+  });
+}
+
+function abort(error) {
+  console.error(error.stack);
+}

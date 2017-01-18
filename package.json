@@ -1,25 +1,21 @@
 {
   "name": "us-rivers",
   "version": "0.0.1",
-  "description": "Roll your own TopoJSON from NHDPlus.",
-  "keywords": [
-    "topojson",
-    "geojson",
-    "shapefile"
-  ],
+  "description": "A map of flowlines from NHDPlus.",
+  "license": "BSD-3-Clause",
   "author": {
     "name": "Mike Bostock",
-    "url": "http://bost.ocks.org/mike"
+    "url": "https://bost.ocks.org/mike"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/mbostock/us-rivers.git"
+    "url": "https://github.com/mbostock/us-rivers.git"
   },
   "devDependencies": {
-    "canvas": "1",
-    "d3": "3",
-    "queue-async": "1",
-    "shapefile": "0.1",
-    "topojson": "1"
+    "canvas": "^1.6.2",
+    "commander": "^2.9.0",
+    "d3-geo": "^1.4.0",
+    "d3-geo-projection": "^1.2.1",
+    "shapefile": "^0.5.11"
   }
 }
